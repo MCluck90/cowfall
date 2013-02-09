@@ -37,6 +37,7 @@ var Game = (function($, undefined) {
         context.fillStyle = CLEAR_COLOR;
         context.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
+        /*
         var standingSprite = Sprites.WaterPit.open;
 
         for (var y = 0, rows = standingSprite.length; y < rows; y++) {
@@ -53,7 +54,10 @@ var Game = (function($, undefined) {
             }
 
         }
+        */
+        Level.draw(context);
 
+        // Display the palette
         for (var i = 0; i < 16; i++) {
 
             for (var j = 0; j < 8; j++) {
@@ -74,6 +78,8 @@ var Game = (function($, undefined) {
                 CANVAS_OFFSET_TOP = $canvas.offset().top;
                 CANVAS_OFFSET_LEFT = $canvas.offset().left;
                 context = canvasEl.getContext('2d');
+
+                Level.init();
             }
 
             clearInterval(gameLoop);
@@ -81,6 +87,10 @@ var Game = (function($, undefined) {
                 update();
                 draw();
             }, 1000 / FPS);
+        },
+
+        getCanvasSize: function() {
+            return { x: CANVAS_WIDTH, y: CANVAS_HEIGHT };
         }
     };
 
