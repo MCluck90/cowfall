@@ -6,7 +6,7 @@ var Game = (function($, undefined) {
     _game,
 
     // Color used when clearing the screen
-    CLEAR_COLOR = "#222",
+    CLEAR_COLOR = COLORS[0][0],
 
     // Properties of the canvas
     CANVAS_WIDTH,
@@ -18,7 +18,10 @@ var Game = (function($, undefined) {
     SCALE_FACTOR = 4,
 
     // Frames per second to run the game at
-    FPS = 60,
+    FPS = 30,
+
+    // The canvas element
+    canvas,
 
     // The canvas drawing context
     context,
@@ -34,43 +37,28 @@ var Game = (function($, undefined) {
     // Draws all of the objects
     function draw() {
         // Clear the screen
+        canvas.width = canvas.width;
         context.fillStyle = CLEAR_COLOR;
         context.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-        /*
-        var standingSprite = Sprites.WaterPit.open;
-
-        for (var y = 0, rows = standingSprite.length; y < rows; y++) {
-
-            for (var x = 0, columns = standingSprite[y].length; x < columns; x++) {
-                var color = standingSprite[y][x];
-
-                if (color === null) {
-                    continue;
-                }
-
-                context.fillStyle = COLORS[color[0]][color[1]];
-                context.fillRect(x * SCALE_FACTOR, y * SCALE_FACTOR, SCALE_FACTOR, SCALE_FACTOR);
-            }
-
-        }
-        */
+        // Draw out the terrain and any hazards
         Level.draw(context);
+
+        _game.drawSprite(Sprites.MudPit.open, 50, 100);
 
         // Display the palette
         for (var i = 0; i < 16; i++) {
-
             for (var j = 0; j < 8; j++) {
                 context.fillStyle = COLORS[i][j];
                 context.fillRect(j * 16 + 672, i * 16, 16, 16);
             }
-
         }
     }
 
     _game = {
         init: function(canvasEl) {
             if (canvasEl !== undefined) {
+                canvas = canvasEl;
                 var $canvas = $(canvasEl);
 
                 CANVAS_WIDTH = canvasEl.width;
@@ -89,8 +77,34 @@ var Game = (function($, undefined) {
             }, 1000 / FPS);
         },
 
+        /**
+         * Returns the size of the canvas
+         * @return {Object}
+         */
         getCanvasSize: function() {
             return { x: CANVAS_WIDTH, y: CANVAS_HEIGHT };
+        },
+
+        /**
+         * Draws out a sprite
+         *
+         * @param sprite    A sprite array
+         * @param x         X position
+         * @param y         Y position
+         */
+        drawSprite: function(sprite, x, y) {
+            for (var row = 0, totalRows = sprite.length; row < totalRows; row++) {
+                for (var col = 0, totalCols = sprite[row].length; col < totalCols; col++) {
+                    var color = sprite[row][col];
+
+                    if (color === null) {
+                        continue;
+                    }
+
+                    context.fillStyle = COLORS[color[0]][color[1]];
+                    context.fillRect((x + col) * SCALE_FACTOR, (y + row) * SCALE_FACTOR, SCALE_FACTOR, SCALE_FACTOR);
+                }
+            }
         }
     };
 

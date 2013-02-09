@@ -99,13 +99,14 @@ var Level = (function() {
 
             /** Draw the hills in the background **/
             context.save();
-            var hillX = HILLS_POS.x;
+            var hillX = HILLS_POS.x,
+                hillY = HILLS_POS.y / 0.75 | 0;
+            context.fillStyle = HILLS_COLOR;
             context.scale(1, 0.75);
             for (var i = 0; i < 5; i++) {
-                context.fillStyle = HILLS_COLOR;
-                context.arc(hillX, HILLS_POS.y / 0.75, HILLS_POS.r, 0, Math.PI, true);
+                context.arc(hillX, hillY, HILLS_POS.r, 0, Math.PI, true);
                 context.fill();
-                hillX += HILLS_POS.r * 1.5;
+                hillX += (HILLS_POS.r * 1.5 | 0);
             }
             context.restore();
 
